@@ -714,3 +714,8 @@ https://averagelinuxuser.com/ubuntu_custom_launcher_dock/
 install package debug symbol
 ============================
 https://documentation.ubuntu.com/server/explanation/debugging/debug-symbol-packages/
+
+
+fix dircolors
+=============
+echo "export LS_COLORS=" > ~/.dircolors
