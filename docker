@@ -141,3 +141,7 @@ if docker image inspect spdkdev:latest &> /dev/null; then
   echo "exists"
 fi
 
+
+china mirror
+============
+https://github.com/dongyubin/DockerHub
