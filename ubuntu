@@ -497,11 +497,6 @@ upstream
   (# make -C tools/perf -j8 FEATURE_CHECK_LDFLAGS-libtraceevent=-ltraceevent)
 
 
-install latest ubuntu kernel
-============================
-https://github.com/pimlie/ubuntu-mainline-kernel.sh
-
-
 git send-email
 ==============
 https://www.freedesktop.org/wiki/Software/PulseAudio/HowToUseGitSendEmail/
