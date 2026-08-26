@@ -15,7 +15,7 @@ git send-email
 - .git/config
   [sendemail]
     smtpuser = yibcai01
-    smtpserver = foss.arm.com
+    smtpserver = foss.aaa.com
     smtpencryption = tls
     smtpserverport = 587
     to = seastar-dev@googlegroups.com

@@ -308,7 +308,7 @@ startup disk creator
 
 use own repo
 ============
-deb http://wls-x86-hp07.shanghai.arm.com/debian-openstack/ ./
+deb http://wls-x86-hp07.shanghai.aaa.com/debian-openstack/ ./
 
 
 bridge
@@ -415,7 +415,7 @@ gpg
 - list/export keys
   $ gpg -k
   $ gpg --export -a
-  $ gpg -a -o yibocai.gpg --export yibo.cai@arm.com
+  $ gpg -a -o yibocai.gpg --export yibo.cai@aaa.com
 
 - upload to keyserver
   $ gpg --keyserver hkp://keys.gnupg.net --send-keys 32BA38F0
@@ -423,7 +423,7 @@ gpg
   upload manually to http://pgp.mit.edu/, https://keyserver.pgp.com/
 
 - search keyserver by mail
-  $ gpg --search-keys yibo.cai@arm.com
+  $ gpg --search-keys yibo.cai@aaa.com
 
 
 jenkins time format

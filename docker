@@ -82,7 +82,7 @@ local registry
     --restart=always --name registry registry:2
 
 - client: add to /etc/default/docker
-          DOCKER_OPTS="--insecure-registry wls-x86-hp07.shanghai.arm.com:5000"
+          DOCKER_OPTS="--insecure-registry wls-x86-hp07.shanghai.aaa.com:5000"
 
 
 check network namespace

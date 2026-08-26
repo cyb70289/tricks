@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-tmphost=${TMPHOST:-cyb@wls-x86-hp07.shanghai.arm.com}
+tmphost=${TMPHOST:-cyb@wls-x86-hp07.shanghai.aaa.com}
 
 usage() {
     echo "Usage:"
