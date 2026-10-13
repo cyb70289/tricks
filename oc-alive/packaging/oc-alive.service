@@ -1,0 +1,62 @@
+[Unit]
+Description=oc-alive - OCI Always Free idle-instance guard
+Documentation=file:/opt/oc-alive/README.md
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/oc-alive/config.json
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=oc-alive
+Group=oc-alive
+WorkingDirectory=/opt/oc-alive
+Environment=PYTHONPATH=/opt/oc-alive
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 -m oc_alive run
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+WatchdogSec=120
+TimeoutStopSec=20
+
+# --- "do not disturb": background class, first to be squeezed out -----------
+# CPUWeight=1 is the important one: the cgroup weight (not the burners' nice
+# level) decides how much CPU this service may take when the user is also busy.
+# At weight 1 it gets ~1% of contended CPU, but still every spare cycle when
+# nothing else is runnable, so the CPU target is unaffected.
+Nice=19
+CPUSchedulingPolicy=batch
+CPUWeight=1
+IOSchedulingClass=idle
+IOWeight=1
+OOMScoreAdjust=800
+MemoryMax=55%
+
+# --- integrity --------------------------------------------------------------
+StateDirectory=oc-alive
+StateDirectoryMode=0755
+UMask=0022
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

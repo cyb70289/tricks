@@ -1,0 +1,5 @@
+#!/bin/sh
+# oc-alive launcher (installed as /usr/local/bin/oc-alive)
+PYTHONPATH="${PYTHONPATH:-}:/opt/oc-alive"
+export PYTHONPATH
+exec /usr/bin/python3 -m oc_alive "$@"
