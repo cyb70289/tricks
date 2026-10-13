@@ -15,7 +15,7 @@ from . import __version__, config as config_mod, metrics
 from .cpu import CpuRegulator
 from .mem import MemRegulator
 from .net import NetRegulator
-from .priority import notify, watchdog_ping
+from .priority import notify, set_thread_name, watchdog_ping
 
 log = logging.getLogger("oc-alive")
 
@@ -91,6 +91,7 @@ class Daemon:
                 log.info("%s regulator stopped (disabled in config)", name)
 
     def run(self) -> int:
+        set_thread_name("oc-alive")
         logging.basicConfig(
             level=os.environ.get("OC_ALIVE_LOGLEVEL", "INFO").upper(),
             format="%(asctime)s %(levelname)s %(name)s: %(message)s",

@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
+import threading
 import time
 
 log = logging.getLogger("oc-alive.priority")
@@ -34,6 +35,19 @@ def apply_priority(policy: str = "batch", nice: int = 19) -> None:
         os.sched_setscheduler(0, sched, os.sched_param(0))
     except OSError as exc:  # pragma: no cover - depends on kernel
         log.debug("sched_setscheduler(%s) failed: %s", policy, exc)
+
+
+def set_thread_name(name: str) -> None:
+    """Name the calling OS thread, so ps/top show what each thread does.
+
+    ``threading.Thread(name=...)`` only sets a Python-side attribute; the
+    kernel's per-thread comm stays "python3" unless we set it ourselves.
+    """
+    try:
+        with open(f"/proc/self/task/{threading.get_native_id()}/comm", "w") as handle:
+            handle.write(name[:15])
+    except (OSError, AttributeError) as exc:  # pragma: no cover - best effort
+        log.debug("set_thread_name(%s) failed: %s", name, exc)
 
 
 def priority_label() -> str:

@@ -24,7 +24,7 @@ import time
 from urllib.parse import urlsplit
 
 from . import metrics
-from .priority import apply_priority
+from .priority import apply_priority, set_thread_name
 
 log = logging.getLogger("oc-alive.net")
 
@@ -245,10 +245,10 @@ class NetRegulator:
         ):
             self._sink = _DiscardSink()
             self._sink.start()
-        self._spawn("oc-alive-net-ctl", self._control)
+        self._spawn("oc-net-ctl", self._control)
         workers = max(1, int(self._cfg.get("workers", 2)))
         for index in range(workers):
-            self._spawn(f"oc-alive-net-{index}", self._worker)
+            self._spawn(f"oc-net-{index}", self._worker)
 
     @property
     def enabled(self) -> bool:
@@ -311,6 +311,7 @@ class NetRegulator:
         self._downloaded += max(0, size)
 
     def _control(self) -> None:
+        set_thread_name(threading.current_thread().name)
         apply_priority("other", 0)
         cpu_meter = metrics.CpuMeter()
         self._meter.sample()
@@ -354,6 +355,7 @@ class NetRegulator:
             self.rate_mbps = self._rate_bps / BYTES_PER_MBIT
 
     def _worker(self) -> None:
+        set_thread_name(threading.current_thread().name)
         with self._lock:
             policy = str(self._cfg.get("scheduler", "batch"))
             nice = int(self._cfg.get("nice", 19))

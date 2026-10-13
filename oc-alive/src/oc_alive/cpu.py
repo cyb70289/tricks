@@ -23,7 +23,7 @@ import threading
 import time
 
 from . import metrics
-from .priority import apply_priority, priority_label
+from .priority import apply_priority, priority_label, set_thread_name
 
 log = logging.getLogger("oc-alive.cpu")
 
@@ -53,9 +53,9 @@ class CpuRegulator:
     def start(self) -> None:
         self._stop.clear()
         self._threads = []
-        self._spawn("oc-alive-cpu-ctl", self._control)
+        self._spawn("oc-cpu-ctl", self._control)
         for index in range(self.threads):
-            self._spawn(f"oc-alive-cpu-{index}", self._burn)
+            self._spawn(f"oc-cpu-{index}", self._burn)
 
     @property
     def enabled(self) -> bool:
@@ -100,6 +100,7 @@ class CpuRegulator:
         return _clamp(target, 0.0, 100.0) / 100.0
 
     def _control(self) -> None:
+        set_thread_name(threading.current_thread().name)
         apply_priority("other", 0)  # the controller itself must stay responsive
         meter = metrics.CpuMeter()
         while not self._stop.is_set():
@@ -122,6 +123,7 @@ class CpuRegulator:
                 self.duty = _clamp(self.duty + error * gain, 0.0, 1.0)
 
     def _burn(self) -> None:
+        set_thread_name(threading.current_thread().name)
         with self._lock:
             policy = str(self._cfg.get("scheduler", "batch"))
             nice = int(self._cfg.get("nice", 19))

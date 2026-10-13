@@ -18,8 +18,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from oc_alive import config as config_mod  # noqa: E402
 from oc_alive import metrics  # noqa: E402
 from oc_alive.net import MirrorPool, RateLimiter  # noqa: E402
+from oc_alive.priority import priority_label, set_thread_name  # noqa: E402
 
 MiB = 1024 * 1024
+
+
+class TestPriority(unittest.TestCase):
+    def test_set_thread_name_actually_renames_the_os_thread(self) -> None:
+        seen: dict[str, str] = {}
+
+        def worker() -> None:
+            set_thread_name("oc-test-thread")
+            path = f"/proc/self/task/{threading.get_native_id()}/comm"
+            with open(path, "r") as handle:
+                seen["comm"] = handle.read().strip()
+
+        thread = threading.Thread(target=worker)
+        thread.start()
+        thread.join()
+        self.assertEqual(seen.get("comm"), "oc-test-thread")
+
+    def test_priority_label_is_a_string(self) -> None:
+        self.assertIn("nice", priority_label())
 
 
 class TestConfig(unittest.TestCase):

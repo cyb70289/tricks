@@ -22,6 +22,7 @@ import threading
 import time
 
 from . import metrics
+from .priority import set_thread_name
 
 log = logging.getLogger("oc-alive.mem")
 
@@ -54,7 +55,7 @@ class MemRegulator:
 
     def start(self) -> None:
         self._stop.clear()
-        self._thread = threading.Thread(target=self._run, name="oc-alive-mem", daemon=True)
+        self._thread = threading.Thread(target=self._run, name="oc-mem", daemon=True)
         self._thread.start()
 
     @property
@@ -143,6 +144,7 @@ class MemRegulator:
         return max(0, desired)
 
     def _run(self) -> None:
+        set_thread_name(threading.current_thread().name)
         with self._lock:
             interval = max(0.25, float(self._cfg.get("control_interval_ms", 2000)) / 1000.0)
         next_retouch = time.monotonic() + 60.0
