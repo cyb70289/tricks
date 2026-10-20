@@ -16,3 +16,5 @@
 	renames = copies
 [http]
     sslVerify = false
+[commit]
+    cleanup = scissors
