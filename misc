@@ -480,3 +480,8 @@ adjust max open files per process
 show libs loaded in process
 ===========================
 LD_DEBUG=libs,files
+
+
+ubuntu printer
+==============
+sudo lpadmin -p bizhub -E -v socket://xxx.xxx.xxx.xxx:9100 -P KOC751iopn.ppd 
